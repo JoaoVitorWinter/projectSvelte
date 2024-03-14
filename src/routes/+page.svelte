@@ -18,7 +18,7 @@
 
 	$: head = snake[0];
 	$: tail = snake[snake.length - 1];
-
+	
 	let gameTable: Array<Array<string>> = [
 		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
 		['0', '0', '0', '0', '0', '0', '0', 's', '0', '0', '0', '0', '0', '0', '0'],
@@ -95,7 +95,7 @@
 	function changeDirection(event: { key: string; }) {
 		if (!changedDirection) {
 
-			if (event.key == 'w') {
+			if (event.key.toLowerCase() == 'w' || event.key == "ArrowUp") {
 				if (velocityY == 0) {
 					velocityX = 0;
 					velocityY = -1;
@@ -103,7 +103,7 @@
 				}
 			}
 			
-			if (event.key == 'a') {
+			if (event.key.toLowerCase() == 'a') {
 				if (velocityX == 0) {
 					velocityX = -1;
 					velocityY = 0;
@@ -111,7 +111,7 @@
 				}
 			}
 			
-			if (event.key == 's') {
+			if (event.key.toLowerCase() == 's') {
 				if (velocityY == 0) {
 					velocityX = 0;
 					velocityY = 1;
@@ -119,7 +119,7 @@
 				}
 			}
 			
-			if (event.key == 'd') {
+			if (event.key.toLowerCase() == 'd') {
 				if (velocityX == 0) {
 					velocityX = 1;
 					velocityY = 0;
@@ -152,7 +152,6 @@
 					<div class="row">
 						{#each row as cell, cellIndex ('cell' + rowIndex + cellIndex)}
 							<div class={`cell ${cell == '0' ? 'empty' : cell == 's' ? 'snake' : 'fruit'}`}>
-								{cell}
 							</div>
 						{/each}
 					</div>
