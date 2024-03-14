@@ -8,6 +8,7 @@
 	let velocityX = 0;
 	let velocityY = 1;
 	let gameTick: number;
+	let changedDirection = false;
 	let initialValue = [
 		{ x: 7, y: 2 },
 		{ x: 7, y: 1 }
@@ -17,24 +18,6 @@
 
 	$: head = snake[0];
 	$: tail = snake[snake.length - 1];
-
-	let initialBoard = [
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', 's', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', 's', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
-	];
 
 	let gameTable: Array<Array<string>> = [
 		['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
@@ -64,7 +47,6 @@
 				}
 				continue;
 			}
-			console.log(snake[i]);
 			gameTable[snake[i].y][snake[i].x] = 's';
 		}
 	}
@@ -97,14 +79,57 @@
 	}
 
 	function startGame() {
+		velocityX = 0;
+		velocityY = 1;
 		const gameTick = setInterval(async () => {
 			moveSnake();
+			changedDirection = false;
 			await tick();
 			if (verifyDefeat()) {
 				clearInterval(gameTick);
 				game = false;
 			}
 		}, 250);
+	}
+	
+	function changeDirection(event: { key: string; }) {
+		if (!changedDirection) {
+
+			if (event.key == 'w') {
+				if (velocityY == 0) {
+					velocityX = 0;
+					velocityY = -1;
+					changedDirection = true;
+				}
+			}
+			
+			if (event.key == 'a') {
+				if (velocityX == 0) {
+					velocityX = -1;
+					velocityY = 0;
+					changedDirection = true;
+				}
+			}
+			
+			if (event.key == 's') {
+				if (velocityY == 0) {
+					velocityX = 0;
+					velocityY = 1;
+					changedDirection = true;
+				}
+			}
+			
+			if (event.key == 'd') {
+				if (velocityX == 0) {
+					velocityX = 1;
+					velocityY = 0;
+					changedDirection = true;
+				}
+			}
+		}
+			
+		
+
 	}
 
 	onMount(() => {
@@ -113,6 +138,8 @@
 			clearInterval(gameTick);
 		};
 	});
+
+
 </script>
 
 <Header />
@@ -164,6 +191,8 @@
 		<div class="controles"></div>
 	</section>
 </main>
+
+<svelte:window on:keydown={changeDirection}/>
 
 <Footer />
 
